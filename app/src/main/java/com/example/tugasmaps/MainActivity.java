@@ -125,14 +125,13 @@ public class MainActivity extends AppCompatActivity {
                 fragmentMap.getMapAsync(new OnMapReadyCallback() {
                     @Override
                     public void onMapReady(@NonNull GoogleMap googleMap) {
-                        if (location != null){
-                            LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-                            MarkerOptions markerOptions = new MarkerOptions().position(latLng).title("Current Location!");
+                        if(location != null){
+                            LatLng lng = new LatLng(location.getLatitude(),location.getLongitude());
+                            MarkerOptions markerOptions = new MarkerOptions().position(lng).title("Current Location");
                             googleMap.addMarker(markerOptions);
-                            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
-                        }
-                        else {
-                            Toast.makeText(MainActivity.this, "not given location access on the device", Toast.LENGTH_SHORT).show();
+                            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(lng,15));
+                        }else {
+                            Toast.makeText(MainActivity.this, "please on your location",Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
