@@ -2,6 +2,8 @@ package com.example.tugasmaps;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 
 import com.karumi.dexter.Dexter;
@@ -12,6 +14,7 @@ import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.single.PermissionListener;
 
 import android.Manifest;
+import android.provider.Settings;
 import android.widget.Toast;
 
 
@@ -29,17 +32,21 @@ boolean isPersmissionGranter;
             @Override
             public void onPermissionGranted(PermissionGrantedResponse permissionGrantedResponse) {
                 isPersmissionGranter = true;
-                Toast.makeText(MainActivity.this, "", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "Permission Granter", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onPermissionDenied(PermissionDeniedResponse permissionDeniedResponse) {
-
+                Intent intent = new Intent();
+                intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                Uri uri = Uri.fromParts("package",getPackageName(),"");
+                intent.setData(uri);
+                startActivity(intent);
             }
 
             @Override
             public void onPermissionRationaleShouldBeShown(PermissionRequest permissionRequest, PermissionToken permissionToken) {
-
+                permissionToken.continuePermissionRequest();
             }
         }).check();
     }
