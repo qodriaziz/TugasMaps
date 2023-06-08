@@ -54,10 +54,6 @@ public class MainActivity extends AppCompatActivity {
         fragmentMap = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.google_map);
         locationProviderClient = (FusedLocationProviderClient) LocationServices.getFusedLocationProviderClient(this);
 
-    }
-
-
-    public void checkPermission() {
         Dexter.withContext(getApplicationContext()).withPermission(Manifest.permission.ACCESS_FINE_LOCATION).withListener(new PermissionListener() {
             @Override
             public void onPermissionGranted(PermissionGrantedResponse permissionGrantedResponse) {
@@ -69,10 +65,10 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onPermissionDenied(PermissionDeniedResponse permissionDeniedResponse) {
                 //Intent intent = new Intent();
-                      //intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                      //Uri uri = Uri.fromParts("package", getPackageName(), "");
-                      //intent.setData(uri);
-                      //startActivity(intent);
+                //intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                //Uri uri = Uri.fromParts("package", getPackageName(), "");
+                //intent.setData(uri);
+                //startActivity(intent);
             }
 
             @Override
@@ -80,6 +76,12 @@ public class MainActivity extends AppCompatActivity {
                 permissionToken.continuePermissionRequest();
             }
         }).check();
+
+    }
+
+
+    public void checkPermission() {
+
     }
 
     //{
