@@ -6,6 +6,8 @@ import androidx.core.app.ActivityCompat;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
@@ -31,14 +33,23 @@ import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.SupportMapFragment;
 
+
 import android.Manifest;
 import android.provider.Settings;
 import android.view.WindowManager;
+import android.widget.SearchView;
 import android.widget.Toast;
+
+import java.io.IOException;
+import java.util.List;
 
 
 public class MainActivity extends AppCompatActivity {
     //boolean isPersmissionGranter;
+
+    private SearchView mapSearchView;
+
+    private GoogleMap myMap;
 
     SupportMapFragment fragmentMap;
     FusedLocationProviderClient locationProviderClient;
@@ -77,6 +88,45 @@ public class MainActivity extends AppCompatActivity {
             }
         }).check();
 
+        //search
+        //mapSearchView = findViewById(R.id.mapSearch);
+
+        //mapSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+        //    @Override
+        //    public boolean onQueryTextSubmit(String s) {
+        //        String location = mapSearchView.getQuery().toString();
+        //        List<Address> addressList = null;
+
+        //        if (location != null){
+        //            Geocoder geocoder = new Geocoder(MainActivity.this);
+
+        //            try {
+        //                addressList = geocoder.getFromLocationName(location, 1);
+        //            }catch (IOException e){
+        //                e.printStackTrace();
+        //            }
+
+        //            Address address = addressList.get(0);
+        //            LatLng ling = new LatLng(address.getLatitude(),address.getLongitude());
+                    //MarkerOptions markerOptions = new MarkerOptions().position(lng).title("Current Location");
+        //            myMap.addMarker(new MarkerOptions().position(ling).title(location));
+        //            myMap.animateCamera(CameraUpdateFactory.newLatLngZoom(ling,15));
+
+        //        }
+        //        return false;
+        //    }
+
+        //    @Override
+        //    public boolean onQueryTextChange(String s) {
+        //        return false;
+        //    }
+        //});
+
+    }
+
+   
+    public void onMapReady(@NonNull GoogleMap googleMap){
+        myMap = googleMap;
     }
 
 
