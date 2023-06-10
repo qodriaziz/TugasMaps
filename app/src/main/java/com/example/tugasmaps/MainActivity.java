@@ -3,6 +3,7 @@ package com.example.tugasmaps;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.FragmentActivity;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -44,88 +45,95 @@ import java.io.IOException;
 import java.util.List;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends FragmentActivity implements OnMapReadyCallback {
     //boolean isPersmissionGranter;
 
-    private SearchView mapSearchView;
+    SearchView mapSearchView;
 
-    private GoogleMap myMap;
+    GoogleMap myMap;
 
     SupportMapFragment fragmentMap;
     FusedLocationProviderClient locationProviderClient;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        //checkPermission();
-        //getCurrentLocation();
 
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        fragmentMap = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.google_map);
-        locationProviderClient = (FusedLocationProviderClient) LocationServices.getFusedLocationProviderClient(this);
 
-        Dexter.withContext(getApplicationContext()).withPermission(Manifest.permission.ACCESS_FINE_LOCATION).withListener(new PermissionListener() {
-            @Override
-            public void onPermissionGranted(PermissionGrantedResponse permissionGrantedResponse) {
-                //isPersmissionGranter = true;
-                //Toast.makeText(MainActivity.this, "Permission Granter", Toast.LENGTH_SHORT).show();
-                getCurrentLocation();
-            }
 
-            @Override
-            public void onPermissionDenied(PermissionDeniedResponse permissionDeniedResponse) {
-                //Intent intent = new Intent();
-                //intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                //Uri uri = Uri.fromParts("package", getPackageName(), "");
-                //intent.setData(uri);
-                //startActivity(intent);
-            }
+        @Override
+        protected void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            setContentView(R.layout.activity_main);
+            //checkPermission();
+            //getCurrentLocation();
 
-            @Override
-            public void onPermissionRationaleShouldBeShown(PermissionRequest permissionRequest, PermissionToken permissionToken) {
-                permissionToken.continuePermissionRequest();
-            }
-        }).check();
+            //imapSearch = findViewById(R.id.mapSearch);
 
-        //search
-        //mapSearchView = findViewById(R.id.mapSearch);
+            getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+            fragmentMap = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.google_map);
+            locationProviderClient = (FusedLocationProviderClient) LocationServices.getFusedLocationProviderClient(this);
 
-        //mapSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-        //    @Override
-        //    public boolean onQueryTextSubmit(String s) {
-        //        String location = mapSearchView.getQuery().toString();
-        //        List<Address> addressList = null;
+            Dexter.withContext(getApplicationContext()).withPermission(Manifest.permission.ACCESS_FINE_LOCATION).withListener(new PermissionListener() {
+                @Override
+                public void onPermissionGranted(PermissionGrantedResponse permissionGrantedResponse) {
+                    //isPersmissionGranter = true;
+                    //Toast.makeText(MainActivity.this, "Permission Granter", Toast.LENGTH_SHORT).show();
+                    getCurrentLocation();
+                }
 
-        //        if (location != null){
-        //            Geocoder geocoder = new Geocoder(MainActivity.this);
+                @Override
+                public void onPermissionDenied(PermissionDeniedResponse permissionDeniedResponse) {
+                    //Intent intent = new Intent();
+                    //intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                    //Uri uri = Uri.fromParts("package", getPackageName(), "");
+                    //intent.setData(uri);
+                    //startActivity(intent);
+                }
 
-        //            try {
-        //                addressList = geocoder.getFromLocationName(location, 1);
-        //            }catch (IOException e){
-        //                e.printStackTrace();
-        //            }
+                @Override
+                public void onPermissionRationaleShouldBeShown(PermissionRequest permissionRequest, PermissionToken permissionToken) {
+                    permissionToken.continuePermissionRequest();
+                }
+            }).check();
 
-        //            Address address = addressList.get(0);
-        //            LatLng ling = new LatLng(address.getLatitude(),address.getLongitude());
-                    //MarkerOptions markerOptions = new MarkerOptions().position(lng).title("Current Location");
-        //            myMap.addMarker(new MarkerOptions().position(ling).title(location));
-        //            myMap.animateCamera(CameraUpdateFactory.newLatLngZoom(ling,15));
+            //search
+            mapSearchView = findViewById(R.id.mapSearch);
 
-        //        }
-        //        return false;
-        //    }
+            mapSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                @Override
+                public boolean onQueryTextSubmit(String s) {
+                    String location = mapSearchView.getQuery().toString();
+                    List<Address> addressList = null;
 
-        //    @Override
-        //    public boolean onQueryTextChange(String s) {
-        //        return false;
-        //    }
-        //});
+                    if (location != null || location.equals("")){
+                        Geocoder geocoder = new Geocoder((MainActivity.this));
 
-    }
+                        try {
+                            addressList = geocoder.getFromLocationName(location, 1);
+                        }catch (IOException e){
+                            e.printStackTrace();
+                        }
+
+                        Address address = addressList.get(0);
+                        LatLng ling = new LatLng(address.getLatitude(),address.getLongitude());
+                        MarkerOptions markerOptions = new MarkerOptions().position(ling).title("Current Location");
+                        myMap.addMarker(new MarkerOptions().position(ling).title(location));
+                        myMap.animateCamera(CameraUpdateFactory.newLatLngZoom(ling,15));
+
+                    }
+                    return false;
+                }
+
+                @Override
+                public boolean onQueryTextChange(String s) {
+                    return false;
+                }
+            });
+            fragmentMap.getMapAsync(this);
+
+        }
+
 
    
-    public void onMapReady(@NonNull GoogleMap googleMap){
+    public void onMapReady(GoogleMap googleMap){
         myMap = googleMap;
     }
 
